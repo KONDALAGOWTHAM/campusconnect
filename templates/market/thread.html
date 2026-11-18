@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load ui %}
+{% block title %}Messages about {{ conversation.product.title }} · CampusConnect{% endblock %}
+{% block content %}
+<div class="wrap page narrow">
+  <a class="back-link" href="{% url 'inbox' %}">{% icon "chevron-left" %} Messages</a>
+  <div class="page-header"><h1>{{ conversation.product.title }}</h1><p>Conversation with {% if user.pk == conversation.buyer_id %}{{ conversation.seller.display_name }}{% else %}{{ conversation.buyer.display_name }}{% endif %}</p></div>
+  <div class="panel thread">
+    <div class="message-window"{% if page.number == 1 %} data-messages="{% url 'thread' conversation.pk %}?fragment=messages"{% endif %}>{% include "market/message_list.html" %}</div>
+    <form method="post" class="message-form fields">{% csrf_token %}{% include "market/field.html" with field=form.body %}<button class="button primary">Send message {% icon "arrow-right" %}</button></form>
+  </div>{% include "market/pagination.html" %}
+</div>
+{% endblock %}

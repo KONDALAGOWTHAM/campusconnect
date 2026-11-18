@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% load ui %}
+{% block title %}Marketplace · CampusConnect{% endblock %}
+{% block content %}
+<div class="wrap page">
+  <div class="page-header"><h1>Marketplace</h1><p>Discover second-hand finds from students on your campus.</p></div>
+  <div class="browse-layout">
+    <aside class="panel filters">
+      <h2>{% icon "list-filter" %} Search &amp; filters</h2>
+      <form method="get" class="fields">
+        {% for field in form %}{% include "market/field.html" %}{% endfor %}
+        <button class="button primary">{% icon "search" %} Apply filters</button>
+        <a class="text-link" href="{% url 'marketplace' %}">Clear filters</a>
+      </form>
+    </aside>
+    <div><div class="results-meta"><strong>{{ page.paginator.count }} result{{ page.paginator.count|pluralize }}</strong></div>
+    <div class="product-grid">{% for product in page %}{% include "market/card.html" %}{% empty %}<div class="empty panel">{% icon "search" %}<h2>No matching items</h2><p>Try a broader search or clear your filters.</p><a class="button secondary" href="{% url 'marketplace' %}">Clear filters</a></div>{% endfor %}</div>
+    {% include "market/pagination.html" %}</div>
+  </div>
+</div>
+{% endblock %}

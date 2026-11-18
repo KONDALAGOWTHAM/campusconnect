@@ -1,0 +1,62 @@
+{% load static ui %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{% block description %}Find second-hand textbooks, tech and student essentials at colleges across India. Buy and sell with CampusConnect.{% endblock %}">
+  <title>{% block title %}CampusConnect · Your Campus. Your Marketplace.{% endblock %}</title>
+  <script src="{% static 'market/theme.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'market/app.css' %}">
+  <script defer src="{% static 'market/app.js' %}"></script>
+  {% block scripts %}{% endblock %}
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap navigation">
+      <a class="brand" href="{% url 'home' %}">
+        <span class="brand-mark">{% icon "graduation-cap" %}</span><span>Campus<span class="brand-accent">Connect</span></span>
+      </a>
+      <details class="navigation-menu">
+        <summary class="icon-button" aria-label="Navigation menu" aria-controls="primary-navigation">{% icon "menu" %}</summary>
+      </details>
+        <nav id="primary-navigation" class="nav-links" aria-label="Main navigation">
+          <a {% if request.resolver_match.url_name == 'marketplace' %}aria-current="page"{% endif %} href="{% url 'marketplace' %}">Marketplace</a>
+          <a href="{% url 'home' %}#how-it-works">How it works</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'wishlist' %}">Saved</a><a href="{% url 'inbox' %}">Messages</a><a href="{% url 'dashboard' %}">Dashboard</a>
+            <a class="mobile-only" href="{% url 'profile' %}">Profile</a>{% if user.is_staff %}<a class="mobile-only" href="{% url 'admin:index' %}">Administration</a>{% endif %}
+            <form class="mobile-only" method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="plain-button">Sign out</button></form>
+          {% else %}<a class="mobile-only" href="{% url 'login' %}">Sign in</a>{% endif %}
+        </nav>
+      <div class="nav-actions">
+        <button class="icon-button theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">{% icon "moon" "moon-icon" %}{% icon "sun" "sun-icon" %}</button>
+        {% if user.is_authenticated %}
+          <details class="account-menu">
+            <summary class="avatar" aria-label="Account menu">{{ user.display_name|first|upper }}</summary>
+            <div class="account-links">
+              <a href="{% url 'profile' %}">{% icon "user" %} Profile</a>
+              {% if user.is_staff %}<a href="{% url 'admin:index' %}">{% icon "shield-check" %} Administration</a>{% endif %}
+              <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="plain-button">{% icon "log-out" %} Sign out</button></form>
+            </div>
+          </details>
+        {% else %}<a class="signin" href="{% url 'login' %}">Sign in</a>{% endif %}
+        <a class="button primary nav-sell" href="{% url 'listing_new' %}">{% icon "plus" %}<span>Sell an item</span></a>
+      </div>
+    </div>
+  </header>
+  {% if messages %}
+    <div class="toasts" aria-live="polite">
+      {% for message in messages %}<div class="toast {{ message.tags }}">{% icon "circle-check" %}<span>{{ message }}</span><button type="button" class="icon-button dismiss" aria-label="Dismiss notification">{% icon "x" %}</button></div>{% endfor %}
+    </div>
+  {% endif %}
+  <main id="main">{% block content %}{% endblock %}</main>
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><a class="brand" href="{% url 'home' %}"><span class="brand-mark">{% icon "graduation-cap" %}</span><span>Campus<span class="brand-accent">Connect</span></span></a><p>Good finds. Right on campus.</p></div>
+      <nav aria-label="Footer navigation"><a href="{% url 'marketplace' %}">Marketplace</a><a href="{% url 'home' %}#how-it-works">How it works</a><a href="{% url 'safety' %}">Trust &amp; safety</a></nav>
+      <span>© {% now "Y" %} CampusConnect</span>
+    </div>
+  </footer>
+</body>
+</html>

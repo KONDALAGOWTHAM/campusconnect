@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Profile · CampusConnect{% endblock %}
+{% block content %}
+<div class="wrap page narrow">
+  <div class="page-header"><h1>Your profile</h1><p>{{ user.email }} · Joined {{ user.date_joined|date:"j M Y" }} · {{ user.is_active|yesno:"Active,Suspended" }}</p></div>
+  {% if user.email_verified %}<div class="alert">Email confirmed.</div>{% else %}<form class="alert inline-actions" method="post" action="{% url 'resend' %}">{% csrf_token %}<span>Your email address is awaiting confirmation.</span><button class="button secondary">Resend confirmation</button></form>{% endif %}
+  <form class="panel fields padded" method="post" enctype="multipart/form-data">{% csrf_token %}{% if user.photo %}<img class="avatar" src="{{ user.photo.url }}" alt="Your current profile photo" width="42" height="42">{% endif %}{{ form.non_field_errors }}{% for field in form %}{% include "market/field.html" %}{% endfor %}<button class="button primary">Save profile</button></form>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% load ui %}
+<article class="product-card">
+  <a class="product-link" href="{{ product.get_absolute_url }}">
+    <div class="product-image">
+      {% with image=product.cover %}{% if image %}<img src="{% photo_url image %}" alt="{{ product.title }}" width="414" height="414" loading="lazy" decoding="async">{% else %}{% icon "package" %}{% endif %}{% endwith %}
+      <span class="pill condition">{% if product.status == "reserved" %}Reserved{% else %}{{ product.get_condition_display }}{% endif %}</span>
+    </div>
+    <div class="product-info"><span class="product-category">{{ product.category.name }}</span><h3>{{ product.title }}</h3><strong>{{ product.price|inr }}</strong><span class="product-location">{% icon "map-pin" %} {{ product.college.name }}</span></div>
+  </a>
+  {% if saved_card %}<form class="saved-remove" method="post" action="{% url 'favorite' product.pk %}">{% csrf_token %}<input type="hidden" name="source" value="wishlist"><button class="icon-button" name="action" value="remove" aria-label="Remove {{ product.title }} from saved items">{% icon "heart" %}</button></form>{% endif %}
+</article>

@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% load ui %}
+{% block title %}Saved items · CampusConnect{% endblock %}
+{% block content %}
+<div class="wrap page"><div class="page-header"><h1>Saved items <span class="pill">{{ page.paginator.count }}</span></h1><p>Keep track of the listings you’re interested in.</p></div>
+<div class="product-grid">{% for product in page %}{% include "market/card.html" with saved_card=True %}{% empty %}<div class="empty panel">{% icon "heart" %}<h2>No saved items yet</h2><p>Save a listing from the marketplace to find it here later.</p><a class="button primary" href="{% url 'marketplace' %}">Explore marketplace</a></div>{% endfor %}</div>
+{% include "market/pagination.html" %}</div>
+{% endblock %}

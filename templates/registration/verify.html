@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}Confirm email · CampusConnect{% endblock %}
+{% block content %}<div class="wrap page auth"><div class="panel padded"><h1>Confirm your email</h1>{% if invalid %}<p>This confirmation link has expired or has already been used.</p><a class="text-link" href="{% url 'profile' %}">Go to your profile</a>{% else %}<p>Click below to confirm the email address for your CampusConnect account.</p><form method="post">{% csrf_token %}<button class="button primary">Confirm email</button></form>{% endif %}</div></div>{% endblock %}

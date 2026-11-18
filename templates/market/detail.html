@@ -1,0 +1,43 @@
+{% extends "base.html" %}{% load ui %}
+{% block title %}{{ product.title }} · CampusConnect{% endblock %}
+{% block description %}{{ product.description|truncatechars:145 }}{% endblock %}
+{% block content %}
+<div class="wrap page">
+  <a class="back-link" href="{% url 'marketplace' %}">{% icon "chevron-left" %} Marketplace</a>
+  <div class="detail-grid">
+    <section class="gallery" aria-label="Product photos">
+      <div class="gallery-main">{% with image=product.cover %}{% if image %}<img data-main-photo src="{% photo_url image %}" alt="{{ product.title }}" width="414" height="414">{% else %}{% icon "package" %}{% endif %}{% endwith %}</div>
+      {% if product.images.all|length > 1 %}<div class="gallery-thumbnails">{% for image in product.images.all %}<button type="button" data-gallery-src="{% photo_url image %}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="View photo {{ forloop.counter }}"><img src="{% photo_url image %}" alt="" width="72" height="72"></button>{% endfor %}</div>{% endif %}
+    </section>
+    <div class="detail-copy">
+      <div class="inline-actions"><span class="pill">{{ product.get_condition_display }}</span><span class="pill">{{ product.get_status_display }}</span></div>
+      <h1>{{ product.title }}</h1><strong class="detail-price">{{ product.price|inr }}</strong>
+      <p class="muted">{% icon "map-pin" %} {{ product.college.name }} · {{ product.location }}</p>
+      <p class="muted">{% icon "clock" %} Listed {{ product.created_at|date:"j M Y" }}</p>
+      <div class="description"><h2>About this item</h2><p>{{ product.description }}</p></div>
+      <div class="seller panel">
+        {% if product.seller.photo %}<img class="avatar" src="{{ product.seller.photo.url }}" alt="" width="42" height="42">{% else %}<span class="avatar">{{ product.seller.display_name|first|upper }}</span>{% endif %}
+        <div><strong>{{ product.seller.display_name }}</strong><p class="muted">Member since {{ product.seller.date_joined|date:"M Y" }}{% if product.seller.email_verified %} · Email confirmed{% endif %}</p>{% if product.seller.bio %}<p>{{ product.seller.bio }}</p>{% endif %}</div>
+      </div>
+      {% if owned %}
+      <div class="inline-actions detail-actions">
+        {% if product.status != "removed" %}<a class="button primary" href="{% url 'listing_edit' product.pk %}">Edit listing</a>{% endif %}
+        <form method="post" action="{% url 'listing_state' product.pk %}" class="inline-actions">{% csrf_token %}
+          {% if product.status == "active" %}<button class="button secondary" name="action" value="reserve">Reserve</button>{% endif %}
+          {% if product.status == "active" or product.status == "reserved" %}<button class="button secondary" name="action" value="sold">Mark as sold</button>{% endif %}
+          {% if product.status == "sold" or product.status == "reserved" %}<button class="button secondary" name="action" value="activate">Make available</button>{% endif %}
+          {% if product.status != "removed" %}<button class="button danger" data-confirm="Delete this listing and its conversations?" name="action" value="delete">Delete</button>{% endif %}
+        </form>
+      </div>
+      {% else %}
+      <div class="inline-actions detail-actions">
+        {% if contactable %}{% if user.is_authenticated %}<form method="post" action="{% url 'contact' product.pk %}">{% csrf_token %}<button class="button primary">{% icon "message-circle" %} Contact seller</button></form>{% else %}<a class="button primary" href="{% url 'login' %}?next={{ request.path|urlencode }}">{% icon "message-circle" %} Sign in to contact</a>{% endif %}{% endif %}
+        {% if user.is_authenticated %}<form method="post" action="{% url 'favorite' product.pk %}">{% csrf_token %}<button class="button secondary" name="action" value="{% if saved %}remove{% else %}add{% endif %}">{% icon "heart" %} {% if saved %}Unsave item{% else %}Save item{% endif %}</button></form>{% else %}<a class="button secondary" href="{% url 'login' %}?next={{ request.path|urlencode }}">{% icon "heart" %} Save item</a>{% endif %}
+      </div>
+      <a class="back-link" href="{% url 'report' product.pk %}">{% icon "flag" %} Report listing</a>
+      {% endif %}
+    </div>
+  </div>
+  {% if similar %}<section class="home-section"><div class="section-head"><h2>Similar items</h2></div><div class="product-grid">{% for product in similar %}{% include "market/card.html" %}{% endfor %}</div></section>{% endif %}
+</div>
+{% endblock %}

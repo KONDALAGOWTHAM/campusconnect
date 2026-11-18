@@ -1,0 +1,3 @@
+{% for entry in entries %}
+  <article class="bubble{% if entry.sender_id == user.pk %} own{% endif %}"><strong>{% if entry.sender_id == user.pk %}You{% else %}{{ entry.sender.display_name }}{% endif %}</strong><p>{{ entry.body }}</p><time datetime="{{ entry.created_at|date:'c' }}">{{ entry.created_at|date:"j M, H:i" }}</time></article>
+{% empty %}<p class="muted">Write a message to start the conversation.</p>{% endfor %}

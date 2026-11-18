@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load ui %}
+{% block title %}Messages · CampusConnect{% endblock %}
+{% block content %}
+<div class="wrap page narrow"><div class="page-header"><h1>Messages</h1><p>Manage your campus sales and purchases.</p></div>
+<div class="panel list">
+{% for conversation in page %}
+  <a class="list-row" href="{% url 'thread' conversation.pk %}"><span class="avatar">{% icon "message-circle" %}</span><span class="grow"><strong>{{ conversation.product.title }}</strong><small>{% if conversation.buyer_id == user.pk %}{{ conversation.seller.display_name }}{% else %}{{ conversation.buyer.display_name }}{% endif %} · {{ conversation.updated_at|date:"j M, H:i" }}</small></span>{% if conversation.unread %}<span class="pill">{{ conversation.unread }} unread</span>{% endif %}{% icon "arrow-right" %}</a>
+{% empty %}
+  <div class="empty">{% icon "inbox" %}<h2>No conversations yet</h2><p>Contact a seller from an item’s listing to start a conversation.</p><a class="button primary" href="{% url 'marketplace' %}">Browse listings</a></div>
+{% endfor %}
+</div>{% include "market/pagination.html" %}</div>
+{% endblock %}

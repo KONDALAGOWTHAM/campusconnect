@@ -1,0 +1,10 @@
+{% extends "admin/index.html" %}
+{% block content %}
+{% if marketplace_counts %}
+  <section class="module" aria-label="Marketplace activity">
+    <h2>Marketplace activity</h2>
+    <ul>{% for label, count in marketplace_counts %}<li>{{ label }} <strong>{{ count }}</strong></li>{% endfor %}</ul>
+  </section>
+{% endif %}
+{{ block.super }}
+{% endblock %}
