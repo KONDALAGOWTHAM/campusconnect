@@ -2,6 +2,8 @@
 
 **Your Campus. Your Marketplace.**
 
+[**Open CampusConnect**](https://kondalagowtham.github.io/campusconnect/) to browse sample listings, search and apply filters in the free demo. Sign-in, posting and messaging are available when running the Django app.
+
 CampusConnect is a campus-focused marketplace for pre-owned textbooks, electronics, bicycles and student essentials. Buyers can find affordable items nearby, and sellers can arrange exchanges through private listing-specific messages.
 
 ## What you can do
